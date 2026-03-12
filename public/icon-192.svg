@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#0a0a0f"/>
+  <circle cx="96" cy="86" r="35" fill="none" stroke="#f5c542" stroke-width="3" opacity="0.8"/>
+  <circle cx="96" cy="86" r="20" fill="#42d4f5" opacity="0.6"/>
+  <circle cx="96" cy="86" r="8" fill="#ffffff" opacity="0.9"/>
+  <text x="96" y="158" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#e8e8f0" letter-spacing="6">WHRIL</text>
+</svg>
