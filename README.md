@@ -1,81 +1,78 @@
 # Whril 🌀
 
-Whril is a smart, gamified study and focus timer application built with Next.js. It uses on-device AI (MediaPipe) to track your posture and presence, ensuring you stay focused during your study sessions. 
+Whril is a gamified study and focus timer that uses on-device vision-based posture detection to help you stay focused. It runs entirely in the browser (no frames or video are sent to any server) and rewards consistent focus with a virtual pet that grows over time.
 
-## WORK STILL IN PROGRESS ##
+## Key Features
 
-As you maintain focus, your virtual pet companion grows and thrives!
+- Smart posture & presence detection using MediaPipe (runs in a Web Worker)
+- Phase-driven Pomodoro flow (IDLE → CALIBRATING → FOCUS → BREAK → READY)
+- Virtual pet that levels and changes appearance based on focus time
+- Privacy-first: all inference happens locally in the browser
+- PWA-ready (via `next-pwa`) and offline-capable using IndexedDB
 
-## ✨ Features
+## Quickstart
 
-- **Smart Posture Tracking**: Uses your webcam and MediaPipe Vision AI to detect if you are `FOCUSED`, `DISTRACTED`, or `ABSENT`.
-- **Privacy First (On-Device AI)**: All camera processing happens locally in your browser using a dedicated Web Worker. No video frames are ever sent to a server.
-- **Phase-Driven Pomodoro Timer**: Seamlessly transitions between `IDLE`, `CALIBRATING`, `FOCUS`, `BREAK`, and `READY` phases.
-- **Virtual Pet Companion**: Your focus time directly impacts your virtual pet's well-being and growth.
-- **Progressive Web App (PWA)**: Installable on your device for a native-like experience.
-- **Screen Wake Lock**: Automatically prevents your device screen from sleeping while a focus session is active.
-- **Offline Capable**: Uses IndexedDB (`idb-keyval`) to save your pet's progress locally.
+Requirements
+- Node.js 18+ (recommended)
 
-## 🛠️ Tech Stack
-
-- **Framework**: [Next.js 16](https://nextjs.org/) (React 19)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **AI / Computer Vision**: [@mediapipe/tasks-vision](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker/web_js)
-- **Local Storage**: IndexedDB via `idb-keyval`
-- **PWA**: `next-pwa`
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
-
-### Installation
-
-1. Clone this repository (if you haven't already).
-2. Install the dependencies:
+Install and run (npm):
 
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
+npm run dev
 ```
 
-3. Run the development server:
+Open http://localhost:3000 in your browser.
+
+Other package managers:
 
 ```bash
-npm run dev
-# or
+# yarn
+yarn
 yarn dev
-# or
+
+# pnpm
+pnpm install
 pnpm dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build for production
 
-## 📁 Project Structure
+```bash
+npm run build
+npm start
+```
 
-- `src/app/`: Next.js App Router pages and layouts.
-  - `page.tsx`: The main application orchestrator, handling phase transitions and rendering.
-  - `worker/`: Contains the Web Worker (`detection.worker.ts`) for off-thread AI inference.
-- `src/components/`:
-  - `Camera/`: Handles the hidden camera feed and passes frames to the AI worker.
-  - `Pet/`: The virtual pet avatar and status HUD.
-  - `Session/`: Pomodoro timer, calibration overlay, and session setup components.
-- `src/hooks/`: Custom React hooks, including the Zustand `useStore` and the main focus loop logic.
-- `src/lib/`: Utility functions and helpers.
-- `src/types/`: TypeScript type definitions.
+## Project Structure
 
-## 🔒 Permissions Required
+- `src/app/` — Next.js App Router: pages, layouts (client components where necessary)
+  - `worker/` — Web Worker for MediaPipe inference (`detection.worker.ts`)
+- `src/components/` — UI components (Camera, Pet, Session components)
+- `src/hooks/` — Hooks like `useStore` (Zustand) and the focus loop `useFocusLoop`
+- `src/lib/` — Pet logic and helpers
 
-To operate correctly, Whril requires **Camera** permissions from your browser. This must be allowed when prompted so the AI can track your posture.
+## Development Notes
 
-> **Note on Incognito Mode:** If you use Whril in Incognito/Private Browsing, your pet's progress will not be saved permanently due to browser storage restrictions.
+- Camera permission is required for posture tracking. The app runs fine without a camera but tracking features will be disabled.
+- The app uses a Wake Lock to keep the screen awake while a focus session is active; browsers may require a user gesture or deny the request.
+- The MediaPipe model is loaded in-browser; initial load may take a moment.
 
-## 📄 License
+## Testing & Linting
 
-This project is licensed under the MIT License.
+- Lint: `npm run lint` (uses ESLint)
+- Build: `npm run build` (Next.js production build)
+
+## Contributing
+
+1. Fork the repo and create a feature branch.
+2. Make changes and run `npm run lint` and `npm run build`.
+3. Open a PR with a clear description of changes.
+
+If you'd like me to push this repository to GitHub for you, tell me whether to use an existing remote or to create a new repo (provide a name). I can commit and push locally; creating a remote requires credentials or you can add the remote and push.
+
+## License
+
+MIT
+
+---
+_If anything specific should be included in the docs (CI, deployment, badges), tell me and I'll add them._

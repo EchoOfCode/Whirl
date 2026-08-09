@@ -1,11 +1,11 @@
 // ────────────────────────────────────────────────────────────
 // WhrilAvatar — Procedurally generated SVG pet
 // ────────────────────────────────────────────────────────────
-'use client';
+ 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/hooks/useStore';
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { EvolutionStage, FocusStatus } from '@/lib/petLogic';
 
 function getColors(focus: FocusStatus, aura: number) {
@@ -35,17 +35,31 @@ function getColors(focus: FocusStatus, aura: number) {
 // ── Particles ──
 // Use fixed cx/cy + motion x/y transforms to avoid SVG attribute errors
 function Particles({ count, color, radius, focus }: { count: number; color: string; radius: number; focus: FocusStatus }) {
+    // Use a small deterministic PRNG (pure function) to produce stable "random" values
+    // without calling impure `Math.random()` during render. This keeps the component
+    // pure while still producing varied particle properties.
+    const prng = (n: number) => {
+        const x = Math.sin(n) * 10000;
+        return x - Math.floor(x);
+    };
+
     const particles = useMemo(
         () => Array.from({ length: count }, (_, i) => {
             const angle = (i / count) * 360;
+            const angleRad = (angle * Math.PI) / 180;
+            const delay = prng(i * 13 + count * 7 + Math.floor(radius)) * 2;
+            const size = 2 + prng(i * 17 + 3) * 3;
+            const orbOffset = prng(i * 23 + 5) * 20;
+            const orbR = radius + orbOffset;
             return {
                 id: i,
                 angle,
-                delay: Math.random() * 2,
-                size: 2 + Math.random() * 3,
-                orbR: radius + Math.random() * 20,
-                cx: Math.cos((angle * Math.PI) / 180) * (radius + Math.random() * 20),
-                cy: Math.sin((angle * Math.PI) / 180) * (radius + Math.random() * 20),
+                delay,
+                size,
+                orbR,
+                cx: Math.cos(angleRad) * (radius + prng(i * 29 + 11) * 20),
+                cy: Math.sin(angleRad) * (radius + prng(i * 31 + 19) * 20),
+                seed: i,
             };
         }),
         [count, radius]
@@ -60,8 +74,8 @@ function Particles({ count, color, radius, focus }: { count: number; color: stri
                 const pos1x = Math.cos(((p.angle + 180) * Math.PI) / 180) * p.orbR;
                 const pos1y = Math.sin(((p.angle + 180) * Math.PI) / 180) * p.orbR;
 
-                const jitterX = focus === 'DISTRACTED' ? (Math.random() - 0.5) * 10 : 0;
-                const jitterY = focus === 'DISTRACTED' ? (Math.random() - 0.5) * 10 : 0;
+                const jitterX = focus === 'DISTRACTED' ? (prng(p.seed * 41 + 2) - 0.5) * 10 : 0;
+                const jitterY = focus === 'DISTRACTED' ? (prng(p.seed * 43 + 7) - 0.5) * 10 : 0;
 
                 return (
                     <motion.circle

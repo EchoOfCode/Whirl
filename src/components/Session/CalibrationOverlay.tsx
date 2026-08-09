@@ -38,7 +38,8 @@ export default function CalibrationOverlay() {
         if (phase !== 'counting') return;
 
         if (countdown <= 0) {
-            setPhase('locking');
+                // Avoid synchronous state update inside effect — schedule async
+                setTimeout(() => setPhase('locking'), 0);
             return;
         }
 

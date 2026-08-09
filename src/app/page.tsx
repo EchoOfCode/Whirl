@@ -81,9 +81,15 @@ export default function HomePage() {
   // Acquire wake lock when tracking starts
   useEffect(() => {
     if (isTracking) {
-      acquireWakeLock();
+      // Avoid calling setState synchronously inside an effect — schedule async
+      setTimeout(() => {
+        void acquireWakeLock();
+      }, 0);
     } else {
-      releaseWakeLock();
+      // Schedule release to avoid synchronous state update inside effect
+      setTimeout(() => {
+        void releaseWakeLock();
+      }, 0);
     }
   }, [isTracking, acquireWakeLock, releaseWakeLock]);
 

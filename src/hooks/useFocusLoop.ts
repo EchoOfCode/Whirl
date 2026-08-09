@@ -13,7 +13,6 @@ export function useFocusLoop() {
     const sessionPhase = useStore((s) => s.sessionPhase);
     const tick = useStore((s) => s.tick);
     const decrementTimer = useStore((s) => s.decrementTimer);
-    const pomodoroTimeLeft = useStore((s) => s.pomodoroTimeLeft);
     const pomodoroConfig = useStore((s) => s.pomodoroConfig);
     const setSessionPhase = useStore((s) => s.setSessionPhase);
     const resetTimer = useStore((s) => s.resetTimer);
